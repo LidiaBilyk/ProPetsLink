@@ -50,18 +50,18 @@ public class LinkServiceImpl implements LinkService {
 //		sendLink(link);
 	}
 
-	private void sendLink(Link link) {
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> responseEntity = null;
-		try {
-			RequestEntity<LinkDto> requestEntity = new RequestEntity<LinkDto>(linkTolinkDto(link), HttpMethod.POST,	new URI(linkConfiguration.getNotificationsUri()));
-			responseEntity = restTemplate.exchange(requestEntity, String.class);
-		} catch (RestClientException e) {
-			throw new ConflictException();
-		} catch (URISyntaxException e) {
-			throw new BadRequestException();
-		}
-	}
+//	private void sendLink(Link link) {
+//		RestTemplate restTemplate = new RestTemplate();
+//		ResponseEntity<String> responseEntity = null;
+//		try {
+//			RequestEntity<LinkDto> requestEntity = new RequestEntity<LinkDto>(linkTolinkDto(link), HttpMethod.POST,	new URI(linkConfiguration.getNotificationsUri()));
+//			responseEntity = restTemplate.exchange(requestEntity, String.class);
+//		} catch (RestClientException e) {
+//			throw new ConflictException();
+//		} catch (URISyntaxException e) {
+//			throw new BadRequestException();
+//		}
+//	}
 
 	private Link lostsToLink(Map<String, Set<String>> result) {		
 		String id = result.keySet().stream().findFirst().get();
