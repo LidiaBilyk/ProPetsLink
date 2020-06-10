@@ -2,7 +2,6 @@ package propets.link.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +16,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import propets.link.configuration.LinkConfiguration;
 import propets.link.dao.LinkRepository;
 import propets.link.dao.PostRepository;
@@ -50,8 +43,7 @@ public class LinkServiceImpl implements LinkService {
 
 //	matches losts - one id, many logins	
 	@StreamListener(DispatcherService.INPUT)
-	public void lostConverter(String message) {
-		Map<String, Set<String>> result = mapHandler(message);
+	public void lostConverter(Map<String, Set<String>> result) {
 		Link link = lostsToLink(result);
 		linkRepository.save(link);
 // send to notifications
@@ -71,19 +63,6 @@ public class LinkServiceImpl implements LinkService {
 		}
 	}
 
-	private Map<String, Set<String>> mapHandler(String message) {
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, Set<String>> result = new HashMap<>();
-		try {
-			result = mapper.readValue(message, new TypeReference<Map<String, Set<String>>>() {});
-		} catch (JsonMappingException e) {
-			throw new ConflictException();
-		} catch (JsonProcessingException e) {
-			throw new ConflictException();
-		}
-		return result;
-	}
-
 	private Link lostsToLink(Map<String, Set<String>> result) {		
 		String id = result.keySet().stream().findFirst().get();
 		Set<String> userLogins = result.get(id);
@@ -95,8 +74,7 @@ public class LinkServiceImpl implements LinkService {
 
 //	matches founds - one login, many ids
 	@StreamListener(DispatcherService.MATCHES_FOUND)
-	public void foundConverter(String message) {
-		Map<String, Set<String>> result = mapHandler(message);
+	public void foundConverter(Map<String, Set<String>> result) {
 		Link link = foundsToLink(result);
 		linkRepository.save(link);
 // send to notifications
@@ -120,10 +98,20 @@ public class LinkServiceImpl implements LinkService {
 	}
 
 	private PostDto postToPostDto(Post post) {
-		return PostDto.builder().id(post.getId()).typePost(post.isTypePost()).userLogin(post.getUserLogin())
-				.username(post.getUsername()).avatar(post.getAvatar()).datePost(post.getDatePost()).type(post.getType())
-				.breed(post.getBreed()).tags(post.getTags()).photos(post.getPhotos()).address(post.getAddress())
-				.location(post.getLocation()).build();
+		return PostDto.builder()
+				.id(post.getId())
+				.typePost(post.isTypePost())
+				.userLogin(post.getUserLogin())
+				.username(post.getUsername())
+				.avatar(post.getAvatar())
+				.datePost(post.getDatePost())
+				.type(post.getType())
+				.breed(post.getBreed())
+				.tags(post.getTags())
+				.photos(post.getPhotos())
+				.address(post.getAddress())
+				.location(post.getLocation())
+				.build();
 	}
 
 	private LinkDto linkTolinkDto(Link link) {
