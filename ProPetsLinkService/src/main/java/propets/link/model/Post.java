@@ -27,6 +27,7 @@ public class Post {
     String avatar;
 	LocalDateTime datePost;
 	String type;
+	String sex;
 	String breed;	
 	List<String> tags;	
 	List<String> photos;

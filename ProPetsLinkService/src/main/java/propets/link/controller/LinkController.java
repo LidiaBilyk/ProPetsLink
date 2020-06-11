@@ -17,7 +17,7 @@ public class LinkController {
 	@Autowired
 	LinkService linkService;
 	
-	@GetMapping("/link/{id}")
+	@GetMapping("/{id}")
 	public List<PostDto> getLink(@PathVariable String id) {
 		return linkService.getLink(id);
 	}

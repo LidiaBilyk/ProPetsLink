@@ -106,6 +106,7 @@ public class LinkServiceImpl implements LinkService {
 				.avatar(post.getAvatar())
 				.datePost(post.getDatePost())
 				.type(post.getType())
+				.sex(post.getSex())
 				.breed(post.getBreed())
 				.tags(post.getTags())
 				.photos(post.getPhotos())
